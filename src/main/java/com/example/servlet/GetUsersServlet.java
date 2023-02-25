@@ -12,12 +12,20 @@ import java.io.IOException;
 import java.util.Set;
 
 @WebServlet("/users")
-public class GetUsersServlet  extends HttpServlet {
+public class GetUsersServlet extends HttpServlet {
     //write your code here!
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Set<User> users = Warehouse.getInstance().getUsers();
         req.setAttribute("users", users);
-        req.getRequestDispatcher("/users.jsp").forward(req, resp);
+
+        try {
+            req.getRequestDispatcher("/users.jsp").forward(req, resp);
+        } catch (ServletException | IOException e) {
+            // handle the exception here
+            e.printStackTrace();
+            // or log the exception and return a user-friendly error message to the user
+            resp.getWriter().println("An error occurred while processing your request. Please try again later.");
+        }
     }
 }
